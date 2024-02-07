@@ -9,7 +9,7 @@
             "type": "go",
             "request": "launch",
             "mode": "auto",
-            "program": "${workspaceFolder}/SpaceShooter/game/game.go"
+            "program": "${workspaceFolder}/SpaceShooter/main.go"
         }
     ]
 }
