@@ -1,10 +1,7 @@
 package game
 
 import (
-	"fmt"
-
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
 
 const (
@@ -30,8 +27,6 @@ func (b *Background) Draw(screen *ebiten.Image) {
 	op := &ebiten.DrawImageOptions{}
 	op.GeoM.Scale(xScale, yScale)
 	screen.DrawImage(b.sprite, op)
-
-	ebitenutil.DebugPrint(screen, fmt.Sprintf("TPS: %0.2f", ebiten.ActualTPS()))
 }
 
 func NewBackground(sprite *ebiten.Image) *Background {
