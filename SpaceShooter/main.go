@@ -9,8 +9,9 @@ import (
 func main() {
 	assets := assets.NewAssets()
 	background := game.NewBackground(assets.Background)
+	player := game.NewPlayer(assets.Player, background.ScreenWidth, background.ScreenHeight)
 
-	g := &game.Game{Background: background}
+	g := &game.Game{Background: background, Player: player}
 
 	ebiten.SetWindowSize(background.ScreenWidth, background.ScreenHeight)
 	ebiten.SetWindowTitle("Space Shooter (Ebitengine Learning)")

@@ -9,14 +9,17 @@ import (
 
 type Game struct {
 	Background *Background
+	Player     *Player
 }
 
 func (g *Game) Update() error {
-	return nil
+	err := g.Player.Update()
+	return err
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	g.Background.Draw(screen)
+	g.Player.Draw(screen)
 
 	ebitenutil.DebugPrint(screen, fmt.Sprintf("TPS: %0.2f", ebiten.ActualTPS()))
 }
