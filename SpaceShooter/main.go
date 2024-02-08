@@ -12,7 +12,7 @@ func main() {
 
 	g := &game.Game{Background: background}
 
-	ebiten.SetWindowSize(background.ScreenWidth*2, background.ScreenHeight*2)
+	ebiten.SetWindowSize(background.ScreenWidth, background.ScreenHeight)
 	ebiten.SetWindowTitle("Space Shooter (Ebitengine Learning)")
 
 	err := ebiten.RunGame(g)
