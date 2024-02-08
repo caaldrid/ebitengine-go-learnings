@@ -4,6 +4,7 @@ import (
 	"embed"
 	"image"
 	_ "image/png"
+	"io/fs"
 
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -14,6 +15,7 @@ var assetsFS embed.FS
 type Assets struct {
 	Background *ebiten.Image
 	Player     *ebiten.Image
+	Meteors    []*ebiten.Image
 }
 
 func (a *Assets) loadImageFromFS(path string) *ebiten.Image {
@@ -31,10 +33,25 @@ func (a *Assets) loadImageFromFS(path string) *ebiten.Image {
 	return ebiten.NewImageFromImage(img)
 }
 
+func (a *Assets) loadMultipleImagesFromFS(globPath string) []*ebiten.Image {
+	matches, err := fs.Glob(assetsFS, globPath)
+	if err != nil {
+		panic(err)
+	}
+
+	images := make([]*ebiten.Image, len(matches))
+	for i, match := range matches {
+		images[i] = a.loadImageFromFS(match)
+	}
+
+	return images
+}
+
 func NewAssets() *Assets {
 	a := &Assets{}
 	a.Background = a.loadImageFromFS("Backgrounds/darkPurple.png")
 	a.Player = a.loadImageFromFS("PNG/playerShip1_orange.png")
+	a.Meteors = a.loadMultipleImagesFromFS("PNG/Meteors/*.png")
 
 	return a
 }
