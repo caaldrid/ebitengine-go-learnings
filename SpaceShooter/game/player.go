@@ -3,6 +3,7 @@ package game
 import (
 	"math"
 
+	"github.com/caaldrid/ebitengine-go-learnings/SpaceShooter/assets"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
@@ -10,15 +11,6 @@ type Player struct {
 	sprite   *ebiten.Image
 	position Vector
 	rotation float64
-}
-
-func calcCenter(sprite *ebiten.Image) (float64, float64) {
-	// Find the center of the sprite
-	bounds := sprite.Bounds()
-	halfW := float64(bounds.Dx()) / 2
-	halfH := float64(bounds.Dy()) / 2
-
-	return halfW, halfH
 }
 
 func (p *Player) Update() error {
@@ -39,7 +31,7 @@ func (p *Player) Update() error {
 }
 
 func (p *Player) Draw(screen *ebiten.Image) {
-	halfW, halfH := calcCenter(p.sprite)
+	halfW, halfH := assets.CalcCenter(p.sprite)
 
 	op := &ebiten.DrawImageOptions{}
 
@@ -53,7 +45,7 @@ func (p *Player) Draw(screen *ebiten.Image) {
 }
 
 func NewPlayer(sprite *ebiten.Image, ScreenWidth, ScreenHeight int) *Player {
-	halfW, halfH := calcCenter(sprite)
+	halfW, halfH := assets.CalcCenter(sprite)
 	// Set Player position to the center of the screen offseted by the plater center
 	pos := Vector{
 		X: float64(ScreenWidth)/2 - halfW,

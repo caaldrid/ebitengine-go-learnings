@@ -55,3 +55,12 @@ func NewAssets() *Assets {
 
 	return a
 }
+
+func CalcCenter(sprite *ebiten.Image) (float64, float64) {
+	// Find the center of the sprite
+	bounds := sprite.Bounds()
+	halfW := float64(bounds.Dx()) / 2
+	halfH := float64(bounds.Dy()) / 2
+
+	return halfW, halfH
+}
