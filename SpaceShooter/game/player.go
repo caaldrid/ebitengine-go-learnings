@@ -6,11 +6,6 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
-type Vector struct {
-	X float64
-	Y float64
-}
-
 type Player struct {
 	sprite   *ebiten.Image
 	position Vector
