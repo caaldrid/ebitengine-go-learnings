@@ -8,7 +8,7 @@ import (
 )
 
 type Player struct {
-	sprite   *ebiten.Image
+	asset    *assets.Asset
 	position Vector
 	rotation float64
 }
@@ -31,7 +31,7 @@ func (p *Player) Update() error {
 }
 
 func (p *Player) Draw(screen *ebiten.Image) {
-	halfW, halfH := assets.CalcCenter(p.sprite)
+	halfW, halfH := p.asset.CalcCenter()
 
 	op := &ebiten.DrawImageOptions{}
 
@@ -41,11 +41,11 @@ func (p *Player) Draw(screen *ebiten.Image) {
 	op.GeoM.Translate(halfW, halfH)
 
 	op.GeoM.Translate(p.position.X, p.position.Y)
-	screen.DrawImage(p.sprite, op)
+	screen.DrawImage(p.asset.Sprite, op)
 }
 
-func NewPlayer(sprite *ebiten.Image, ScreenWidth, ScreenHeight int) *Player {
-	halfW, halfH := assets.CalcCenter(sprite)
+func NewPlayer(asset *assets.Asset, ScreenWidth, ScreenHeight int) *Player {
+	halfW, halfH := asset.CalcCenter()
 	// Set Player position to the center of the screen offseted by the plater center
 	pos := Vector{
 		X: float64(ScreenWidth)/2 - halfW,
@@ -53,7 +53,7 @@ func NewPlayer(sprite *ebiten.Image, ScreenWidth, ScreenHeight int) *Player {
 	}
 
 	return &Player{
-		sprite:   sprite,
+		asset:    asset,
 		position: pos,
 	}
 }

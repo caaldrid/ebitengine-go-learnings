@@ -12,13 +12,26 @@ import (
 //go:embed Backgrounds/* PNG/*
 var assetsFS embed.FS
 
-type Assets struct {
-	Background *ebiten.Image
-	Player     *ebiten.Image
-	Meteors    []*ebiten.Image
+type Asset struct {
+	Sprite *ebiten.Image
 }
 
-func (a *Assets) loadImageFromFS(path string) *ebiten.Image {
+func (a *Asset) CalcCenter() (float64, float64) {
+	// Find the center of the sprite
+	bounds := a.Sprite.Bounds()
+	halfW := float64(bounds.Dx()) / 2
+	halfH := float64(bounds.Dy()) / 2
+
+	return halfW, halfH
+}
+
+type Assets struct {
+	Background *Asset
+	Player     *Asset
+	Meteors    []*Asset
+}
+
+func (as *Assets) loadImageFromFS(path string) *Asset {
 	f, err := assetsFS.Open(path)
 	if err != nil {
 		panic(err)
@@ -30,37 +43,30 @@ func (a *Assets) loadImageFromFS(path string) *ebiten.Image {
 		panic(err)
 	}
 
-	return ebiten.NewImageFromImage(img)
+	return &Asset{
+		Sprite: ebiten.NewImageFromImage(img),
+	}
 }
 
-func (a *Assets) loadMultipleImagesFromFS(globPath string) []*ebiten.Image {
+func (as *Assets) loadMultipleImagesFromFS(globPath string) []*Asset {
 	matches, err := fs.Glob(assetsFS, globPath)
 	if err != nil {
 		panic(err)
 	}
 
-	images := make([]*ebiten.Image, len(matches))
+	images := make([]*Asset, len(matches))
 	for i, match := range matches {
-		images[i] = a.loadImageFromFS(match)
+		images[i] = as.loadImageFromFS(match)
 	}
 
 	return images
 }
 
 func NewAssets() *Assets {
-	a := &Assets{}
-	a.Background = a.loadImageFromFS("Backgrounds/darkPurple.png")
-	a.Player = a.loadImageFromFS("PNG/playerShip1_orange.png")
-	a.Meteors = a.loadMultipleImagesFromFS("PNG/Meteors/*.png")
+	as := &Assets{}
+	as.Background = as.loadImageFromFS("Backgrounds/darkPurple.png")
+	as.Player = as.loadImageFromFS("PNG/playerShip1_orange.png")
+	as.Meteors = as.loadMultipleImagesFromFS("PNG/Meteors/*.png")
 
-	return a
-}
-
-func CalcCenter(sprite *ebiten.Image) (float64, float64) {
-	// Find the center of the sprite
-	bounds := sprite.Bounds()
-	halfW := float64(bounds.Dx()) / 2
-	halfH := float64(bounds.Dy()) / 2
-
-	return halfW, halfH
+	return as
 }

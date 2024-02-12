@@ -12,7 +12,7 @@ import (
 var target Vector
 
 type meteor struct {
-	sprite   *ebiten.Image
+	asset    *assets.Asset
 	pos      Vector
 	rotation float64
 }
@@ -20,7 +20,7 @@ type meteor struct {
 func (m *meteor) move() {
 	// Randomized velocity
 	velocity := 0.25 + rand.Float64()*1.5
-	halfW, halfH := assets.CalcCenter(m.sprite)
+	halfW, halfH := m.asset.CalcCenter()
 
 	// Direction is the target minus the current position
 	direction := Vector{
@@ -40,11 +40,11 @@ func (m *meteor) move() {
 }
 
 type Meteors struct {
-	sprites      []*ebiten.Image
-	meteors      []*meteor
-	timer        *Timer
-	spawnRadious float64
-	player       *Player
+	meteorsAssets []*assets.Asset
+	meteors       []*meteor
+	timer         *Timer
+	spawnRadious  float64
+	player        *Player
 }
 
 func (me *Meteors) Update() error {
@@ -54,7 +54,7 @@ func (me *Meteors) Update() error {
 	if me.timer.Completed() {
 		me.timer.Reset()
 
-		newMetorSprite := me.sprites[rand.Intn(len(me.sprites))]
+		newMetorAsset := me.meteorsAssets[rand.Intn(len(me.meteorsAssets))]
 
 		// Calcuate where in the circle the meteor will spawn
 		angle := rand.Float64() * 2 * math.Pi
@@ -62,7 +62,7 @@ func (me *Meteors) Update() error {
 		posY := target.Y + math.Sin(angle)*me.spawnRadious
 
 		newMetor := &meteor{
-			sprite: newMetorSprite,
+			asset: newMetorAsset,
 			pos: Vector{
 				X: posX,
 				Y: posY,
@@ -85,28 +85,28 @@ func (me *Meteors) Draw(screen *ebiten.Image) {
 		op := &ebiten.DrawImageOptions{}
 
 		// Rotate
-		halfW, halfH := assets.CalcCenter(metor.sprite)
+		halfW, halfH := metor.asset.CalcCenter()
 		op.GeoM.Translate(-halfW, -halfH)
 		op.GeoM.Rotate(metor.rotation)
 		op.GeoM.Translate(halfW, halfH)
 
 		op.GeoM.Translate(metor.pos.X, metor.pos.Y)
-		screen.DrawImage(metor.sprite, op)
+		screen.DrawImage(metor.asset.Sprite, op)
 	}
 }
 
-func NewMetors(sprites []*ebiten.Image, player *Player, ScreenWidth int) *Meteors {
-	playerHalfW, playerHalfH := assets.CalcCenter(player.sprite)
+func NewMetors(assets []*assets.Asset, player *Player, ScreenWidth int) *Meteors {
+	playerHalfW, playerHalfH := player.asset.CalcCenter()
 	target = Vector{
 		X: player.position.X + playerHalfW,
 		Y: player.position.Y + playerHalfH,
 	}
 
 	return &Meteors{
-		sprites:      sprites,
-		timer:        NewTimer(3 * time.Second),
-		spawnRadious: float64(ScreenWidth) / 2.0,
-		meteors:      make([]*meteor, 0),
-		player:       player,
+		meteorsAssets: assets,
+		timer:         NewTimer(3 * time.Second),
+		spawnRadious:  float64(ScreenWidth) / 2.0,
+		meteors:       make([]*meteor, 0),
+		player:        player,
 	}
 }
