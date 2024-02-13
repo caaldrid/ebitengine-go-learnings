@@ -9,7 +9,7 @@ import (
 
 type Player struct {
 	asset    *assets.Asset
-	Bullets  *Bullet
+	Armory   *Armory
 	position Vector
 	angle    float64
 }
@@ -28,7 +28,7 @@ func (p *Player) Update() error {
 		p.angle += speed
 	}
 
-	return p.Bullets.Update(p)
+	return p.Armory.Update(p)
 
 }
 
@@ -45,7 +45,7 @@ func (p *Player) Draw(screen *ebiten.Image) {
 	op.GeoM.Translate(p.position.X, p.position.Y)
 	screen.DrawImage(p.asset.Sprite, op)
 
-	p.Bullets.Draw(screen)
+	p.Armory.Draw(screen)
 }
 
 func NewPlayer(playerAsset *assets.Asset, bulletAssets *assets.BulletAssets, ScreenWidth, ScreenHeight int) *Player {
@@ -58,7 +58,7 @@ func NewPlayer(playerAsset *assets.Asset, bulletAssets *assets.BulletAssets, Scr
 
 	return &Player{
 		asset:    playerAsset,
-		Bullets:  NewBullet(bulletAssets, ScreenWidth, ScreenHeight),
+		Armory:   NewArmory(bulletAssets, float64(ScreenWidth), float64(ScreenHeight)),
 		position: pos,
 		angle:    0,
 	}
