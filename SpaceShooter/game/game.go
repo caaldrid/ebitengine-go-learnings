@@ -30,7 +30,10 @@ func (g *Game) Update() error {
 				g.Player.Armory.bullets = append(g.Player.Armory.bullets[:j], g.Player.Armory.bullets[j+1:]...)
 			}
 		}
+	}
 
+	// Need to iterate through any meteors left after taking into account collisions with bullets
+	for i, meteor := range g.Meteors.meteors {
 		// Handle the collision between meteors and player
 		if meteor.asset.Intersects(g.Player.asset) {
 			g.Meteors.meteors = append(g.Meteors.meteors[:i], g.Meteors.meteors[i+1:]...) // Delete the Meteor
