@@ -37,11 +37,24 @@ func (a *Armory) Update(player *Player) error {
 		a.bullets = append(a.bullets, NewBullet(asset, velocity, player))
 	}
 
-	for _, bullet := range a.bullets {
-		err := bullet.Update(a.maxXBound, a.maxYBound)
-		if err != nil {
-			return err
+	if len(a.bullets) > 0 {
+		inBoundBullets := make([]*Bullet, 0)
+		for _, bullet := range a.bullets {
+			canMoveX := bullet.pos.X > 0 && bullet.pos.X < a.maxXBound
+			canMoveY := bullet.pos.Y > 0 && bullet.pos.Y < a.maxYBound
+			if canMoveX && canMoveY {
+				err := bullet.Update()
+				if err != nil {
+					return err
+				}
+
+				// Populate new slice with the bullets that could still be moved
+				// This will allow us to not keep pointers to bullets that out of bounds
+				inBoundBullets = append(inBoundBullets, bullet)
+			}
 		}
+
+		a.bullets = inBoundBullets
 	}
 
 	return nil

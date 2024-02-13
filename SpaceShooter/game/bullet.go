@@ -30,16 +30,10 @@ func (b *Bullet) Draw(screen *ebiten.Image) {
 	}
 }
 
-func (b *Bullet) Update(maxXBound, maxYBound float64) error {
-	canMoveX := b.pos.X > 0 && b.pos.X < maxXBound
-	canMoveY := b.pos.Y > 0 && b.pos.Y < maxYBound
+func (b *Bullet) Update() error {
+	b.pos.X += math.Sin(b.angle) * b.velocity
+	b.pos.Y += math.Cos(b.angle) * -b.velocity
 
-	if canMoveX && canMoveY {
-		b.pos.X += math.Sin(b.angle) * b.velocity
-		b.pos.Y += math.Cos(b.angle) * -b.velocity
-	} else {
-		b.asset = nil
-	}
 	return nil
 }
 
