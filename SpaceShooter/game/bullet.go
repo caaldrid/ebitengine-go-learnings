@@ -9,7 +9,6 @@ import (
 
 type Bullet struct {
 	asset    *assets.Asset
-	pos      Vector
 	angle    float64
 	velocity float64
 }
@@ -25,30 +24,34 @@ func (b *Bullet) Draw(screen *ebiten.Image) {
 		op.GeoM.Rotate(b.angle)
 		op.GeoM.Translate(halfW, halfH)
 
-		op.GeoM.Translate(b.pos.X, b.pos.Y)
+		op.GeoM.Translate(b.asset.Pos.X, b.asset.Pos.Y)
 		screen.DrawImage(b.asset.Sprite, op)
 	}
 }
 
 func (b *Bullet) Update() error {
-	b.pos.X += math.Sin(b.angle) * b.velocity
-	b.pos.Y += math.Cos(b.angle) * -b.velocity
+	b.asset.Pos.X += math.Sin(b.angle) * b.velocity
+	b.asset.Pos.Y += math.Cos(b.angle) * -b.velocity
 
 	return nil
 }
 
-func NewBullet(asset *assets.Asset, bulletVelocity float64, player *Player) *Bullet {
+func NewBullet(sprite *ebiten.Image, bulletVelocity float64, player *Player) *Bullet {
+	asset := &assets.Asset{
+		Sprite: sprite,
+	}
 
 	halfW, halfH := asset.CalcCenter()
 	pHalfW, pHalfH := player.asset.CalcCenter()
 
+	asset.Pos = assets.Vector{
+		X: player.asset.Pos.X + pHalfW - halfW,
+		Y: player.asset.Pos.Y + pHalfH - halfH,
+	}
+
 	return &Bullet{
-		asset: asset,
-		angle: player.angle,
-		pos: Vector{
-			X: player.position.X + pHalfW - halfW,
-			Y: player.position.Y + pHalfH - halfH,
-		},
+		asset:    asset,
+		angle:    player.angle,
 		velocity: bulletVelocity,
 	}
 }

@@ -9,11 +9,10 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
-var target Vector
+var target assets.Vector
 
 type meteor struct {
 	asset    *assets.Asset
-	pos      Vector
 	rotation float64
 }
 
@@ -23,28 +22,28 @@ func (m *meteor) move() {
 	halfW, halfH := m.asset.CalcCenter()
 
 	// Direction is the target minus the current position
-	direction := Vector{
-		X: target.X - (m.pos.X + halfW),
-		Y: target.Y - (m.pos.Y + halfH),
+	direction := assets.Vector{
+		X: target.X - (m.asset.Pos.X + halfW),
+		Y: target.Y - (m.asset.Pos.Y + halfH),
 	}
 
 	// Normalize the vector — get just the direction without the length
 	normalizedDirection := direction.Normalize()
 
 	// Update the meteor's position
-	m.pos.X += normalizedDirection.X * velocity
-	m.pos.Y += normalizedDirection.Y * velocity
+	m.asset.Pos.X += normalizedDirection.X * velocity
+	m.asset.Pos.Y += normalizedDirection.Y * velocity
 
 	// calculate the spin of the meteor
 	m.rotation += math.Pi / float64(ebiten.TPS()) * velocity
 }
 
 type Meteors struct {
-	meteorsAssets []*assets.Asset
-	meteors       []*meteor
-	timer         *Timer
-	spawnRadious  float64
-	player        *Player
+	meteorsSprites []*ebiten.Image
+	meteors        []*meteor
+	timer          *Timer
+	spawnRadious   float64
+	player         *Player
 }
 
 func (me *Meteors) Update() error {
@@ -54,7 +53,7 @@ func (me *Meteors) Update() error {
 	if me.timer.Completed() {
 		me.timer.Reset()
 
-		newMetorAsset := me.meteorsAssets[rand.Intn(len(me.meteorsAssets))]
+		newMetorSprite := me.meteorsSprites[rand.Intn(len(me.meteorsSprites))]
 
 		// Calcuate where in the circle the meteor will spawn
 		angle := rand.Float64() * 2 * math.Pi
@@ -62,10 +61,12 @@ func (me *Meteors) Update() error {
 		posY := target.Y + math.Sin(angle)*me.spawnRadious
 
 		newMetor := &meteor{
-			asset: newMetorAsset,
-			pos: Vector{
-				X: posX,
-				Y: posY,
+			asset: &assets.Asset{
+				Sprite: newMetorSprite,
+				Pos: assets.Vector{
+					X: posX,
+					Y: posY,
+				},
 			},
 		}
 
@@ -90,23 +91,21 @@ func (me *Meteors) Draw(screen *ebiten.Image) {
 		op.GeoM.Rotate(metor.rotation)
 		op.GeoM.Translate(halfW, halfH)
 
-		op.GeoM.Translate(metor.pos.X, metor.pos.Y)
+		op.GeoM.Translate(metor.asset.Pos.X, metor.asset.Pos.Y)
 		screen.DrawImage(metor.asset.Sprite, op)
 	}
 }
 
-func NewMetors(assets []*assets.Asset, player *Player, ScreenWidth int) *Meteors {
+func NewMetors(sprites []*ebiten.Image, player *Player, ScreenWidth int) *Meteors {
 	playerHalfW, playerHalfH := player.asset.CalcCenter()
-	target = Vector{
-		X: player.position.X + playerHalfW,
-		Y: player.position.Y + playerHalfH,
-	}
+	target.X = player.asset.Pos.X + playerHalfW
+	target.Y = player.asset.Pos.Y + playerHalfH
 
 	return &Meteors{
-		meteorsAssets: assets,
-		timer:         NewTimer(3000 * time.Millisecond),
-		spawnRadious:  float64(ScreenWidth) / 2.0,
-		meteors:       make([]*meteor, 0),
-		player:        player,
+		meteorsSprites: sprites,
+		timer:          NewTimer(3000 * time.Millisecond),
+		spawnRadious:   float64(ScreenWidth) / 2.0,
+		meteors:        make([]*meteor, 0),
+		player:         player,
 	}
 }

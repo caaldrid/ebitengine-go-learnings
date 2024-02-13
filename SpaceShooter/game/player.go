@@ -8,10 +8,9 @@ import (
 )
 
 type Player struct {
-	asset    *assets.Asset
-	Armory   *Armory
-	position Vector
-	angle    float64
+	asset  *assets.Asset
+	Armory *Armory
+	angle  float64
 }
 
 func (p *Player) Update() error {
@@ -45,23 +44,22 @@ func (p *Player) Draw(screen *ebiten.Image) {
 	op.GeoM.Rotate(p.angle)
 	op.GeoM.Translate(halfW, halfH)
 
-	op.GeoM.Translate(p.position.X, p.position.Y)
+	op.GeoM.Translate(p.asset.Pos.X, p.asset.Pos.Y)
 	screen.DrawImage(p.asset.Sprite, op)
 
 }
 
-func NewPlayer(playerAsset *assets.Asset, bulletAssets *assets.BulletAssets, ScreenWidth, ScreenHeight int) *Player {
+func NewPlayer(playerAsset *assets.Asset, bulletSprites *assets.BulletSprites, ScreenWidth, ScreenHeight int) *Player {
 	halfW, halfH := playerAsset.CalcCenter()
 	// Set Player position to the center of the screen offseted by the plater center
-	pos := Vector{
+	playerAsset.Pos = assets.Vector{
 		X: float64(ScreenWidth)/2 - halfW,
 		Y: float64(ScreenHeight)/2 - halfH,
 	}
 
 	return &Player{
-		asset:    playerAsset,
-		Armory:   NewArmory(bulletAssets, float64(ScreenWidth), float64(ScreenHeight)),
-		position: pos,
-		angle:    0,
+		asset:  playerAsset,
+		Armory: NewArmory(bulletSprites, float64(ScreenWidth), float64(ScreenHeight)),
+		angle:  0,
 	}
 }

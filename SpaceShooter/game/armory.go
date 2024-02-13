@@ -12,12 +12,12 @@ const (
 )
 
 type Armory struct {
-	bulletAssets *assets.BulletAssets
-	bullets      []*Bullet
-	bulletTimer  *Timer
-	hasUpgrade   bool
-	maxXBound    float64
-	maxYBound    float64
+	bulletSprites *assets.BulletSprites
+	bullets       []*Bullet
+	bulletTimer   *Timer
+	hasUpgrade    bool
+	maxXBound     float64
+	maxYBound     float64
 }
 
 func (a *Armory) Update(player *Player) error {
@@ -27,10 +27,10 @@ func (a *Armory) Update(player *Player) error {
 	if a.bulletTimer.Completed() && ebiten.IsKeyPressed(ebiten.KeySpace) {
 		a.bulletTimer.Reset()
 
-		asset := a.bulletAssets.Basic
+		asset := a.bulletSprites.Basic
 		velocity := bulletSpeedPerSecond / float64(ebiten.TPS())
 		if a.hasUpgrade {
-			asset = a.bulletAssets.Upgrade
+			asset = a.bulletSprites.Upgrade
 			velocity *= 2
 		}
 
@@ -40,8 +40,8 @@ func (a *Armory) Update(player *Player) error {
 	if len(a.bullets) > 0 {
 		inBoundBullets := make([]*Bullet, 0)
 		for _, bullet := range a.bullets {
-			canMoveX := bullet.pos.X > 0 && bullet.pos.X < a.maxXBound
-			canMoveY := bullet.pos.Y > 0 && bullet.pos.Y < a.maxYBound
+			canMoveX := bullet.asset.Pos.X > 0 && bullet.asset.Pos.X < a.maxXBound
+			canMoveY := bullet.asset.Pos.Y > 0 && bullet.asset.Pos.Y < a.maxYBound
 			if canMoveX && canMoveY {
 				err := bullet.Update()
 				if err != nil {
@@ -66,13 +66,13 @@ func (a *Armory) Draw(screen *ebiten.Image) {
 	}
 }
 
-func NewArmory(assets *assets.BulletAssets, maxXBound, maxYBound float64) *Armory {
+func NewArmory(sprites *assets.BulletSprites, maxXBound, maxYBound float64) *Armory {
 	return &Armory{
-		bulletAssets: assets,
-		bullets:      make([]*Bullet, 0),
-		bulletTimer:  NewTimer(500 * time.Millisecond),
-		hasUpgrade:   false,
-		maxXBound:    maxXBound,
-		maxYBound:    maxYBound,
+		bulletSprites: sprites,
+		bullets:       make([]*Bullet, 0),
+		bulletTimer:   NewTimer(500 * time.Millisecond),
+		hasUpgrade:    false,
+		maxXBound:     maxXBound,
+		maxYBound:     maxYBound,
 	}
 }
