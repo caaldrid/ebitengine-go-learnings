@@ -26,6 +26,6 @@ func (t *Timer) Reset() {
 func NewTimer(targetInSec time.Duration) *Timer {
 	return &Timer{
 		currTicks: 0,
-		target:    int(targetInSec.Seconds()) * ebiten.TPS(),
+		target:    int(targetInSec.Milliseconds()) * ebiten.TPS() / 1000,
 	}
 }

@@ -104,7 +104,7 @@ func NewMetors(assets []*assets.Asset, player *Player, ScreenWidth int) *Meteors
 
 	return &Meteors{
 		meteorsAssets: assets,
-		timer:         NewTimer(3 * time.Second),
+		timer:         NewTimer(3000 * time.Millisecond),
 		spawnRadious:  float64(ScreenWidth) / 2.0,
 		meteors:       make([]*meteor, 0),
 		player:        player,
