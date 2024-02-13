@@ -29,3 +29,18 @@ func (a *Asset) CalcCenter() (float64, float64) {
 
 	return halfW, halfH
 }
+
+func (a *Asset) MaxX() float64 {
+	return a.Pos.X + float64(a.Sprite.Bounds().Dx())
+}
+
+func (a *Asset) MaxY() float64 {
+	return a.Pos.Y + float64(a.Sprite.Bounds().Dy())
+}
+
+func (a *Asset) Intersects(other *Asset) bool {
+	return a.Pos.X <= other.MaxX() &&
+		other.Pos.X <= a.MaxX() &&
+		a.Pos.Y <= other.MaxY() &&
+		other.Pos.Y <= a.MaxY()
+}
