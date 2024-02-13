@@ -33,6 +33,9 @@ func (p *Player) Update() error {
 }
 
 func (p *Player) Draw(screen *ebiten.Image) {
+	// Draw bullets first so that its under the player sprite
+	p.Armory.Draw(screen)
+
 	halfW, halfH := p.asset.CalcCenter()
 
 	op := &ebiten.DrawImageOptions{}
@@ -45,7 +48,6 @@ func (p *Player) Draw(screen *ebiten.Image) {
 	op.GeoM.Translate(p.position.X, p.position.Y)
 	screen.DrawImage(p.asset.Sprite, op)
 
-	p.Armory.Draw(screen)
 }
 
 func NewPlayer(playerAsset *assets.Asset, bulletAssets *assets.BulletAssets, ScreenWidth, ScreenHeight int) *Player {
