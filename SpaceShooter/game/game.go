@@ -20,6 +20,16 @@ func (g *Game) Update() error {
 	}
 
 	err = g.Meteors.Update()
+
+	// Handle the collision between meteors and bullets
+	for i, meteor := range g.Meteors.meteors {
+		for j, bullet := range g.Player.Armory.bullets {
+			if meteor.asset.Intersects(bullet.asset) {
+				g.Meteors.meteors = append(g.Meteors.meteors[:i], g.Meteors.meteors[i+1:]...)
+				g.Player.Armory.bullets = append(g.Player.Armory.bullets[:j], g.Player.Armory.bullets[j+1:]...)
+			}
+		}
+	}
 	return err
 }
 
