@@ -25,10 +25,22 @@ func (a *Asset) CalcCenter() (float64, float64) {
 	return halfW, halfH
 }
 
+type MissileAssets struct {
+	Bullet    *Asset
+	Explosion *Asset
+}
+
+type BulletAssets struct {
+	Basic   *Asset
+	Upgrade *Asset
+	Missile *MissileAssets
+}
+
 type Assets struct {
 	Background *Asset
 	Player     *Asset
 	Meteors    []*Asset
+	Bullets    *BulletAssets
 }
 
 func (as *Assets) loadImageFromFS(path string) *Asset {
@@ -67,6 +79,14 @@ func NewAssets() *Assets {
 	as.Background = as.loadImageFromFS("Backgrounds/darkPurple.png")
 	as.Player = as.loadImageFromFS("PNG/playerShip1_orange.png")
 	as.Meteors = as.loadMultipleImagesFromFS("PNG/Meteors/*.png")
+	as.Bullets = &BulletAssets{
+		Basic:   as.loadImageFromFS("PNG/Lasers/laserBlue.png"),
+		Upgrade: as.loadImageFromFS("PNG/Lasers/Upgrades/laserGreenUpgrade.png"),
+		Missile: &MissileAssets{
+			Bullet:    as.loadImageFromFS("PNG/Lasers/Upgrades/laserRedMissile.png"),
+			Explosion: as.loadImageFromFS("PNG/Lasers/Upgrades/laserRedMissileExplosion.png"),
+		},
+	}
 
 	return as
 }

@@ -9,8 +9,9 @@ import (
 
 type Player struct {
 	asset    *assets.Asset
+	Bullets  *Bullet
 	position Vector
-	rotation float64
+	angle    float64
 }
 
 func (p *Player) Update() error {
@@ -19,15 +20,16 @@ func (p *Player) Update() error {
 
 	// Go left
 	if ebiten.IsKeyPressed(ebiten.KeyS) {
-		p.rotation -= speed
+		p.angle -= speed
 	}
 
 	// Go right
 	if ebiten.IsKeyPressed(ebiten.KeyF) {
-		p.rotation += speed
+		p.angle += speed
 	}
 
-	return nil
+	return p.Bullets.Update(p)
+
 }
 
 func (p *Player) Draw(screen *ebiten.Image) {
@@ -37,15 +39,17 @@ func (p *Player) Draw(screen *ebiten.Image) {
 
 	// Maintain the player sprite on the center by translating in opposing directions before and after rotation
 	op.GeoM.Translate(-halfW, -halfH)
-	op.GeoM.Rotate(p.rotation)
+	op.GeoM.Rotate(p.angle)
 	op.GeoM.Translate(halfW, halfH)
 
 	op.GeoM.Translate(p.position.X, p.position.Y)
 	screen.DrawImage(p.asset.Sprite, op)
+
+	p.Bullets.Draw(screen)
 }
 
-func NewPlayer(asset *assets.Asset, ScreenWidth, ScreenHeight int) *Player {
-	halfW, halfH := asset.CalcCenter()
+func NewPlayer(playerAsset *assets.Asset, bulletAssets *assets.BulletAssets, ScreenWidth, ScreenHeight int) *Player {
+	halfW, halfH := playerAsset.CalcCenter()
 	// Set Player position to the center of the screen offseted by the plater center
 	pos := Vector{
 		X: float64(ScreenWidth)/2 - halfW,
@@ -53,7 +57,9 @@ func NewPlayer(asset *assets.Asset, ScreenWidth, ScreenHeight int) *Player {
 	}
 
 	return &Player{
-		asset:    asset,
+		asset:    playerAsset,
+		Bullets:  NewBullet(bulletAssets, ScreenWidth, ScreenHeight),
 		position: pos,
+		angle:    0,
 	}
 }

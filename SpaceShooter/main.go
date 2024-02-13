@@ -9,7 +9,7 @@ import (
 func main() {
 	assets := assets.NewAssets()
 	background := game.NewBackground(assets.Background)
-	player := game.NewPlayer(assets.Player, background.ScreenWidth, background.ScreenHeight)
+	player := game.NewPlayer(assets.Player, assets.Bullets, background.ScreenWidth, background.ScreenHeight)
 	meteors := game.NewMetors(assets.Meteors, player, background.ScreenWidth)
 
 	g := &game.Game{Background: background, Player: player, Meteors: meteors}
