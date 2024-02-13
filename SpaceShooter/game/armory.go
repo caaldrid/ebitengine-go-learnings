@@ -38,8 +38,7 @@ func (a *Armory) Update(player *Player) error {
 	}
 
 	if len(a.bullets) > 0 {
-		inBoundBullets := make([]*Bullet, 0)
-		for _, bullet := range a.bullets {
+		for i, bullet := range a.bullets {
 			canMoveX := bullet.asset.Pos.X > 0 && bullet.asset.Pos.X < a.maxXBound
 			canMoveY := bullet.asset.Pos.Y > 0 && bullet.asset.Pos.Y < a.maxYBound
 			if canMoveX && canMoveY {
@@ -47,14 +46,11 @@ func (a *Armory) Update(player *Player) error {
 				if err != nil {
 					return err
 				}
-
-				// Populate new slice with the bullets that could still be moved
+			} else {
 				// This will allow us to not keep pointers to bullets that out of bounds
-				inBoundBullets = append(inBoundBullets, bullet)
+				a.bullets = append(a.bullets[:i], a.bullets[i+1:]...)
 			}
 		}
-
-		a.bullets = inBoundBullets
 	}
 
 	return nil
