@@ -18,8 +18,8 @@ type MissileSprites struct {
 }
 
 type BulletSprites struct {
-	Basic   *ebiten.Image
-	Upgrade *ebiten.Image
+	Basic   *MissileSprites
+	Upgrade *MissileSprites
 	Missile *MissileSprites
 }
 
@@ -60,18 +60,24 @@ func (s *Sprites) loadMultipleImagesFromFS(globPath string) []*ebiten.Image {
 }
 
 func LoadSprites() *Sprites {
-	as := &Sprites{}
-	as.Background = as.loadImageFromFS("Backgrounds/darkPurple.png")
-	as.Player = as.loadImageFromFS("PNG/playerShip1_orange.png")
-	as.Meteors = as.loadMultipleImagesFromFS("PNG/Meteors/*.png")
-	as.Bullets = &BulletSprites{
-		Basic:   as.loadImageFromFS("PNG/Lasers/laserBlue.png"),
-		Upgrade: as.loadImageFromFS("PNG/Lasers/Upgrades/laserGreenUpgrade.png"),
+	s := &Sprites{}
+	s.Background = s.loadImageFromFS("Backgrounds/darkPurple.png")
+	s.Player = s.loadImageFromFS("PNG/playerShip1_orange.png")
+	s.Meteors = s.loadMultipleImagesFromFS("PNG/Meteors/*.png")
+	s.Bullets = &BulletSprites{
+		Basic: &MissileSprites{
+			Bullet:    s.loadImageFromFS("PNG/Lasers/laserBlue.png"),
+			Explosion: s.loadImageFromFS("PNG/Lasers/laserBlueExplosion.png"),
+		},
+		Upgrade: &MissileSprites{
+			Bullet:    s.loadImageFromFS("PNG/Lasers/Upgrades/laserGreenUpgrade.png"),
+			Explosion: s.loadImageFromFS("PNG/Lasers/Upgrades/laserGreenUpgradeExplosion.png"),
+		},
 		Missile: &MissileSprites{
-			Bullet:    as.loadImageFromFS("PNG/Lasers/Upgrades/laserRedMissile.png"),
-			Explosion: as.loadImageFromFS("PNG/Lasers/Upgrades/laserRedMissileExplosion.png"),
+			Bullet:    s.loadImageFromFS("PNG/Lasers/Upgrades/laserRedMissile.png"),
+			Explosion: s.loadImageFromFS("PNG/Lasers/Upgrades/laserRedMissileExplosion.png"),
 		},
 	}
 
-	return as
+	return s
 }

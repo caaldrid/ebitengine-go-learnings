@@ -27,10 +27,10 @@ func (a *Armory) Update(player *Player) error {
 	if a.bulletTimer.Completed() && ebiten.IsKeyPressed(ebiten.KeySpace) {
 		a.bulletTimer.Reset()
 
-		asset := a.bulletSprites.Basic
+		asset := a.bulletSprites.Basic.Bullet
 		velocity := bulletSpeedPerSecond / float64(ebiten.TPS())
 		if a.hasUpgrade {
-			asset = a.bulletSprites.Upgrade
+			asset = a.bulletSprites.Upgrade.Bullet
 			velocity *= 2
 		}
 
