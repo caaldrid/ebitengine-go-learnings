@@ -14,6 +14,7 @@ var target assets.Vector
 type meteor struct {
 	asset    *assets.Asset
 	rotation float64
+	scale    float64
 }
 
 func (m *meteor) move() {
@@ -69,6 +70,8 @@ func (me *Meteors) Update() error {
 				},
 			},
 		}
+
+		newMetor.scale = newMetor.asset.MaxX()
 
 		me.meteors = append(me.meteors, newMetor)
 
