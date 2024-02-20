@@ -106,7 +106,7 @@ func NewMetors(sprites []*ebiten.Image, player *Player, ScreenWidth int) *Meteor
 
 	return &Meteors{
 		meteorsSprites: sprites,
-		timer:          NewTimer(3000 * time.Millisecond),
+		timer:          NewTimer(2000 * time.Millisecond),
 		spawnRadious:   float64(ScreenWidth) / 2.0,
 		meteors:        make([]*meteor, 0),
 		player:         player,
