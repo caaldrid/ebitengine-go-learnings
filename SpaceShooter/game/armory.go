@@ -109,9 +109,9 @@ func (a *Armory) HandleTargetHit(bulletIndex int, meteorHit *assets.Asset) {
 	}
 
 	// Calculate relative scale of explosion from meteor sizeff
-	meteorScale :=
+	meteorScale := float64(meteorHit.Sprite.Bounds().Dx()) / float64(explosionSprite.Bounds().Dx())
 
-		float64(meteorHit.Sprite.Bounds().Dx()) / float64(explosionSprite.Bounds().Dx())
+	// Create new hit instant
 	a.explosions = append(a.explosions, &explosion{
 		asset: &assets.Asset{
 			Sprite: explosionSprite,
