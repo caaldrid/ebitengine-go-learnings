@@ -3,6 +3,7 @@ package game
 import (
 	"fmt"
 
+	"github.com/caaldrid/ebitengine-go-learnings/SpaceShooter/assets"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
@@ -33,10 +34,11 @@ func (g *Game) Update() error {
 	}
 
 	// Need to iterate through any meteors left after taking into account collisions with bullets
-	for i, meteor := range g.Meteors.meteors {
+	for _, meteor := range g.Meteors.meteors {
 		// Handle the collision between meteors and player
 		if meteor.asset.Intersects(g.Player.asset) {
-			g.Meteors.meteors = append(g.Meteors.meteors[:i], g.Meteors.meteors[i+1:]...) // Delete the Meteor
+			g.Reset()
+			break
 		}
 	}
 	return err
@@ -52,4 +54,24 @@ func (g *Game) Draw(screen *ebiten.Image) {
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
 	return g.Background.ScreenWidth, g.Background.ScreenHeight
+}
+
+func (g *Game) Reset() {
+	newGameState := NewGame(assets.LoadSprites())
+
+	g.Background = newGameState.Background
+	g.Player = newGameState.Player
+	g.Meteors = newGameState.Meteors
+}
+
+func NewGame(sprites *assets.Sprites) *Game {
+	background := NewBackground(&assets.Asset{
+		Sprite: sprites.Background,
+	})
+	player := NewPlayer(&assets.Asset{
+		Sprite: sprites.Player,
+	}, sprites.Bullets, background.ScreenWidth, background.ScreenHeight)
+	meteors := NewMetors(sprites.Meteors, player, background.ScreenWidth)
+
+	return &Game{Background: background, Player: player, Meteors: meteors}
 }
