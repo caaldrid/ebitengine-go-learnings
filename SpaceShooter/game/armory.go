@@ -93,6 +93,7 @@ func (a *Armory) Draw(screen *ebiten.Image) {
 		op := &ebiten.DrawImageOptions{}
 		op.GeoM.Scale(explosion.scale, explosion.scale)
 		op.GeoM.Translate(explosion.asset.Pos.X, explosion.asset.Pos.Y)
+		op.Filter = ebiten.FilterLinear
 		screen.DrawImage(explosion.asset.Sprite, op)
 	}
 }

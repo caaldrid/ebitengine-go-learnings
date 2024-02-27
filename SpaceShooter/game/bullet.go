@@ -25,6 +25,7 @@ func (b *Bullet) Draw(screen *ebiten.Image) {
 		op.GeoM.Translate(halfW, halfH)
 
 		op.GeoM.Translate(b.asset.Pos.X, b.asset.Pos.Y)
+		op.Filter = ebiten.FilterLinear
 		screen.DrawImage(b.asset.Sprite, op)
 	}
 }

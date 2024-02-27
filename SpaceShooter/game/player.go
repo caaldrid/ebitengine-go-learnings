@@ -45,6 +45,8 @@ func (p *Player) Draw(screen *ebiten.Image) {
 	op.GeoM.Translate(halfW, halfH)
 
 	op.GeoM.Translate(p.asset.Pos.X, p.asset.Pos.Y)
+
+	op.Filter = ebiten.FilterLinear
 	screen.DrawImage(p.asset.Sprite, op)
 
 }

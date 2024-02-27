@@ -95,6 +95,7 @@ func (me *Meteors) Draw(screen *ebiten.Image) {
 		op.GeoM.Translate(halfW, halfH)
 
 		op.GeoM.Translate(metor.asset.Pos.X, metor.asset.Pos.Y)
+		op.Filter = ebiten.FilterLinear
 		screen.DrawImage(metor.asset.Sprite, op)
 	}
 }
