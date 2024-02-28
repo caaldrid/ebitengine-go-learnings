@@ -2,10 +2,14 @@ package game
 
 import (
 	"fmt"
+	"image/color"
+	"math"
 
 	"github.com/caaldrid/ebitengine-go-learnings/SpaceShooter/assets"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"github.com/hajimehoshi/ebiten/v2/text"
+	"golang.org/x/image/font"
 )
 
 type Game struct {
@@ -13,6 +17,7 @@ type Game struct {
 	Player     *Player
 	Meteors    *Meteors
 	score      int
+	Fonts      *assets.GameFonts
 }
 
 func (g *Game) Update() error {
@@ -51,8 +56,14 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	g.Player.Draw(screen)
 	g.Meteors.Draw(screen)
 
+	// Draw score on screen
+	scoreStr := fmt.Sprintf("\nScore: %06d", g.score)
+	gameScoreBounds, _ := font.BoundString(g.Fonts.ScoreFont, scoreStr)
+	scoreDrawXPos := g.Background.ScreenWidth/2 - int(gameScoreBounds.Max.X.Floor()/2)
+	scoreDrawYPos := int(math.Abs(float64(gameScoreBounds.Min.Y.Floor())))
+	text.Draw(screen, scoreStr, g.Fonts.ScoreFont, scoreDrawXPos, scoreDrawYPos, color.White)
+
 	ebitenutil.DebugPrint(screen, fmt.Sprintf("TPS: %0.2f", ebiten.ActualTPS()))
-	ebitenutil.DebugPrint(screen, fmt.Sprintf("\nScore: %06d", g.score))
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
@@ -77,5 +88,5 @@ func NewGame(sprites *assets.Sprites) *Game {
 	}, sprites.Bullets, background.ScreenWidth, background.ScreenHeight)
 	meteors := NewMetors(sprites.Meteors, player, background.ScreenWidth)
 
-	return &Game{Background: background, Player: player, Meteors: meteors}
+	return &Game{Background: background, Player: player, Meteors: meteors, Fonts: assets.LoadFonts()}
 }

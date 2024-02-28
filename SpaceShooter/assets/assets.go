@@ -17,13 +17,6 @@ type BulletSprites struct {
 	Missile *MissileSprites
 }
 
-type Sprites struct {
-	Background *ebiten.Image
-	Player     *ebiten.Image
-	Meteors    []*ebiten.Image
-	Bullets    *BulletSprites
-}
-
 type Vector struct {
 	X float64
 	Y float64

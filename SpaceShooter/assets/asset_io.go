@@ -7,10 +7,23 @@ import (
 	"io/fs"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"golang.org/x/image/font"
+	"golang.org/x/image/font/opentype"
 )
 
-//go:embed Backgrounds/* PNG/*
+//go:embed Backgrounds/* PNG/* Fonts/*
 var assetsFS embed.FS
+
+type Sprites struct {
+	Background *ebiten.Image
+	Player     *ebiten.Image
+	Meteors    []*ebiten.Image
+	Bullets    *BulletSprites
+}
+
+type GameFonts struct {
+	ScoreFont font.Face
+}
 
 func loadImageFromFS(path string) *ebiten.Image {
 	f, err := assetsFS.Open(path)
@@ -41,6 +54,29 @@ func loadMultipleImagesFromFS(globPath string) []*ebiten.Image {
 	return images
 }
 
+func loadFont(fontName string, Size float64) font.Face {
+	fontFile, err := assetsFS.ReadFile(fontName)
+	if err != nil {
+		panic(err)
+	}
+
+	tt, err := opentype.Parse(fontFile)
+	if err != nil {
+		panic(err)
+	}
+
+	face, err := opentype.NewFace(tt, &opentype.FaceOptions{
+		Size:    Size,
+		DPI:     Size * ebiten.DeviceScaleFactor(),
+		Hinting: font.HintingVertical,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	return face
+}
+
 func LoadSprites() *Sprites {
 	s := &Sprites{}
 	s.Background = loadImageFromFS("Backgrounds/darkPurple.png")
@@ -62,4 +98,10 @@ func LoadSprites() *Sprites {
 	}
 
 	return s
+}
+
+func LoadFonts() *GameFonts {
+	return &GameFonts{
+		ScoreFont: loadFont("Fonts/kenvector_future.ttf", 32),
+	}
 }
