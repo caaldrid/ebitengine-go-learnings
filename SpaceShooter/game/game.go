@@ -12,6 +12,7 @@ type Game struct {
 	Background *Background
 	Player     *Player
 	Meteors    *Meteors
+	score      int
 }
 
 func (g *Game) Update() error {
@@ -29,6 +30,7 @@ func (g *Game) Update() error {
 			if meteor.asset.Intersects(bullet.asset) {
 				g.Player.Armory.HandleTargetHit(j, meteor.asset)
 				g.Meteors.meteors = append(g.Meteors.meteors[:i], g.Meteors.meteors[i+1:]...)
+				g.score++
 			}
 		}
 	}
@@ -50,6 +52,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	g.Meteors.Draw(screen)
 
 	ebitenutil.DebugPrint(screen, fmt.Sprintf("TPS: %0.2f", ebiten.ActualTPS()))
+	ebitenutil.DebugPrint(screen, fmt.Sprintf("\nScore: %06d", g.score))
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
@@ -62,6 +65,7 @@ func (g *Game) Reset() {
 	g.Background = newGameState.Background
 	g.Player = newGameState.Player
 	g.Meteors = newGameState.Meteors
+	g.score = 0
 }
 
 func NewGame(sprites *assets.Sprites) *Game {
