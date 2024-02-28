@@ -6,6 +6,24 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
+type MissileSprites struct {
+	Bullet    *ebiten.Image
+	Explosion *ebiten.Image
+}
+
+type BulletSprites struct {
+	Basic   *MissileSprites
+	Upgrade *MissileSprites
+	Missile *MissileSprites
+}
+
+type Sprites struct {
+	Background *ebiten.Image
+	Player     *ebiten.Image
+	Meteors    []*ebiten.Image
+	Bullets    *BulletSprites
+}
+
 type Vector struct {
 	X float64
 	Y float64
