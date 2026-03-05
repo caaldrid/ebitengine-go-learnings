@@ -1,7 +1,7 @@
 package game
 
 import (
-	"github.com/caaldrid/ebitengine-go-learnings/SpaceShooter/assets"
+	"github.com/caaldrid/ebitengine-go-learnings/assets"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 

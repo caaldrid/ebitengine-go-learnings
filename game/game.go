@@ -5,7 +5,7 @@ import (
 	"image/color"
 	"math"
 
-	"github.com/caaldrid/ebitengine-go-learnings/SpaceShooter/assets"
+	"github.com/caaldrid/ebitengine-go-learnings/assets"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/text"
