@@ -1,6 +1,6 @@
 # Space Shooter
 
-An [Asteroids](https://en.wikipedia.org/wiki/Asteroids_(video_game)) clone built in Go with [Ebitengine](https://ebitengine.org/), using the [Threedots tutorial](https://threedots.tech/post/making-games-in-go/) as a starting point — extended with an explosion system, a weapon upgrade architecture, a dedicated asset abstraction layer, and player-centred circular meteor spawning.
+An Asteroids-inspired game built in Go with [Ebitengine](https://ebitengine.org/). Started from the [Threedots tutorial's](https://threedots.tech/post/making-games-in-go/) core game loop as a foundation, then extended the architecture and added original features.
 
 ![sample](./assets/sample.png)
 
@@ -19,6 +19,14 @@ go run .
 - **Tick-based timer** — a lightweight `Timer` struct counts game ticks rather than calling `time.Now()` in the hot path, converting a `time.Duration` to tick counts via `ebiten.TPS()` at construction time.
 - **Compile-time asset embedding** — all sprites and fonts are baked into the binary via `embed.FS`, so the game ships as a single executable with no external asset files.
 - **Proportional explosion scaling** — explosion sprites are scaled to match the size of the meteor they hit, so large meteors produce larger explosions without needing separate artwork.
+
+### Extended beyond the tutorial
+
+- **Explosion system** — animated sprites with proportionally scaled, randomly spinning explosions and a 250ms lifetime timer.
+- **Weapon upgrade system** — `Armory` struct managing `Basic`, `Upgrade`, and `Missile` bullet types with speed and sprite swaps on upgrade.
+- **Dedicated background entity** — scales to fill any screen size rather than being hardcoded.
+- **Score display** — uses a TTF font with centered positioning calculated via `font.BoundString`.
+- **Armory manager** — bullet lifecycle (spawn, move, out-of-bounds cleanup, hit handling) refactored into a standalone struct rather than living in `game.go`.
 
 ## Assets
 
