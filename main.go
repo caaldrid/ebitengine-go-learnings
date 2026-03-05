@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/caaldrid/ebitengine-go-learnings/SpaceShooter/assets"
-	"github.com/caaldrid/ebitengine-go-learnings/SpaceShooter/game"
+	"github.com/caaldrid/ebitengine-go-learnings/assets"
+	"github.com/caaldrid/ebitengine-go-learnings/game"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
