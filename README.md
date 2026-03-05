@@ -1,6 +1,6 @@
 # Space Shooter
 
-An [Asteroids](https://en.wikipedia.org/wiki/Asteroids_(video_game)) clone built in Go with [Ebitengine](https://ebitengine.org/), following the [Threedots tutorial](https://threedots.tech/post/making-games-in-go/).
+An [Asteroids](https://en.wikipedia.org/wiki/Asteroids_(video_game)) clone built in Go with [Ebitengine](https://ebitengine.org/), using the [Threedots tutorial](https://threedots.tech/post/making-games-in-go/) as a starting point — extended with an explosion system, a weapon upgrade architecture, a dedicated asset abstraction layer, and player-centred circular meteor spawning.
 
 ![sample](./assets/sample.png)
 
